@@ -1,3 +1,9 @@
+import datetime
+import jwt
+from app.api.model.lista_negra import ListaNegraToken
+from ..config import chave
+
+
 from .. import db, flask_criptografia
 
 
@@ -23,9 +29,27 @@ class Usuario(db.Model):
         self.chave_hash = flask_criptografia.generate_password_hash(
             chave).decode('utf-8')
 
-
     def verifica_chave(self, chave):
         return flask_criptografia.check_password_hash(self.chave_hash, chave)
 
     def __repr__(self):
         return f'<Pessoa "{self.nome}">'
+
+    def codifica_token_autenticacao(self, usuario_id: str) -> str:
+        """Gera tokens de autenticação
+
+        Args:
+            usuario_id (str): 
+
+        Returns:
+            str: 
+        """
+        try:
+            carga = {
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
+                'iat': datetime.datetime.utcnow(),
+                'sub': usuario_id
+            }
+            return jwt.encode(carga, chave, algorithm='HS256')
+        except Exception as e:
+            return str(e)

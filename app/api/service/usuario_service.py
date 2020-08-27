@@ -21,14 +21,14 @@ def cria_um_novo_usuario(dado):
         salva_alteracoes(usuario_novo)
         objeto_resposta = {
             'status': 'sucesso',
-            'mensagem': 'Registrado com sucesso.'
+            'mensagem': 'Usuário registrado com sucesso.'
         }
         return objeto_resposta, 201
     
     else:
         objeto_resposta = {
-            'status': 'sucesso',
-            'mensagem': 'Usuário existente. Faça o Login.s'
+            'status': 'atenção',
+            'mensagem': 'Usuário existente. Faça o Login.'
         }
         return objeto_resposta, 409
 

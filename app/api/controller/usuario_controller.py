@@ -14,13 +14,14 @@ _usuario = UsuarioDto.usuario
 @api.route('/')
 class ListaUsuario(Resource):
     @api.doc('lista_de_usuarios_registrados')
-    @api.marshal_list_with(_usuario, envelope='dado')
+    @api.marshal_list_with(_usuario, envelope='usuario')
     def get(self):
         """Lista todos os usuários
         """
         return obtem_usuarios()
 
-    @api.response(201, 'Usuário criado com sucesso')
+    # @api.response(201, 'Usuário criado com sucesso')
+    # @api.response(409, 'confito')
     @api.doc('cria um novo usuário')
     @api.expect(_usuario, validade=True)
     def post(self):
