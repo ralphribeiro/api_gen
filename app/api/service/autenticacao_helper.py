@@ -38,7 +38,7 @@ class Autenticacao:
         else:
             token_autenticacao = ''
         if token_autenticacao:
-            resp = Usuario.dcodifica_token_autenticacao(token_autenticacao)
+            resp = Usuario.decodifica_token_autenticacao(token_autenticacao)
             if not isinstance(resp, str):
                 # mark the token as blacklisted
                 return salva_token(token=token_autenticacao)
