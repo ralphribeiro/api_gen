@@ -35,14 +35,14 @@ class Usuario(db.Model):
     def __repr__(self):
         return f'<Pessoa "{self.nome}">'
 
-    def codifica_token_autenticacao(self, usuario_id: str) -> str:
+    def codifica_token_autenticacao(self, usuario_id: str):
         """Gera tokens de autenticação
 
         Args:
-            usuario_id (str): 
+            usuario_id (str):
 
         Returns:
-            str: 
+            str:
         """
         try:
             carga = {
@@ -53,3 +53,25 @@ class Usuario(db.Model):
             return jwt.encode(carga, chave, algorithm='HS256')
         except Exception as e:
             return str(e)
+
+    @staticmethod
+    def decodifica_token_autenticacao(token_autenticacao):
+        """[summary]
+
+        Args:
+            token_autenticacao ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+        try:
+            payload = jwt.decode(token_autenticacao, chave)
+            token_esta_bloqueado = ListaNegraToken.check_blacklist(token_autenticacao)
+            if token_esta_bloqueado:
+                return 'Token está na lista negra. Faça Login novamente.'
+            else:
+                return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Assinatura expidada. Faça Login novamente.'
+        except jwt.InvalidTokenError:
+            return 'Token inválido. Faça Login novamente.'

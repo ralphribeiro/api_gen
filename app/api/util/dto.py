@@ -9,3 +9,11 @@ class UsuarioDto:
         'chave': fields.String(required=True, description='chave'),
         'id_publico': fields.String(description='identificador')
     })
+
+
+class AutenticacaoDto:
+    api = Namespace('autenticacao', description='operações relacionadas à autenticação')
+    usuario = api.model('autenticacao_detalhes', {
+        'email': fields.String(required=True, description='endereço de email'),
+        'chave': fields.String(required=True, description='chave'),
+    })
