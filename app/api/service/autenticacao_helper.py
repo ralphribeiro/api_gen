@@ -54,3 +54,33 @@ class Autenticacao:
                 'menssagem': 'Forneça um token de autenticação válido.'
             }
             return objeto_resposta, 403
+
+
+    @staticmethod
+    def obtem_usuario_logado(nova_requisicao):
+        token_autenticacao = nova_requisicao.headers.get('Autorizacao')
+        if token_autenticacao:
+            resp = Usuario.decodifica_token_autenticacao(token_autenticacao)
+            if not isinstance(resp, str):
+                usuario = Usuario.query.filter_by(id=resp).first()
+                objeto_resposta = {
+                    'status': 'sucesso',
+                    'dado': {
+                        'usuario_id': usuario.id,
+                        'email': usuario.email,
+                        'admin': usuario.admin,
+                        'registrado_em': str(usuario.registered_on)
+                    }
+                }
+                return objeto_resposta, 200
+            objeto_resposta = {
+                'status': 'falha',
+                'mensagem': resp
+            }
+            return objeto_resposta, 401
+        else:
+            objeto_resposta = {
+                'status': 'falha',
+                'mensagem': 'Forneça um token de autenticacao válido.'
+            }
+            return objeto_resposta, 401

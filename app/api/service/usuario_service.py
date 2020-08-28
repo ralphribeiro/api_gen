@@ -19,12 +19,8 @@ def cria_um_novo_usuario(dado):
         )
 
         salva_alteracoes(usuario_novo)
-        objeto_resposta = {
-            'status': 'sucesso',
-            'mensagem': 'Usuário registrado com sucesso.'
-        }
-        return objeto_resposta, 201
-    
+        return gera_token(usuario_novo)
+
     else:
         objeto_resposta = {
             'status': 'atenção',
@@ -44,3 +40,20 @@ def obtem_usuario(id_publico):
 def salva_alteracoes(dado):
     db.session.add(dado)
     db.session.commit()
+
+
+def gera_token(usuario):
+    try:
+        token_autenticacao = usuario.codcodifica_token_autenticacao(usuario.id)
+        objeto_resposta = {
+            'status': 'sucesso',
+            'mensagem': 'Registrado com sucesso.',
+            'Autorização': token_autenticacao.decode()
+        }
+        return objeto_resposta, 201
+    except Exception as e:
+        objeto_resposta = {
+            'status': 'falha',
+            'mensagem': 'Ocorreu um erro inesperado, tente novamente mais tarde'
+        }
+        return objeto_resposta, 401

@@ -35,14 +35,8 @@ class Usuario(db.Model):
     def __repr__(self):
         return f'<Usuário "{self.nome}">'
 
-    def codifica_token_autenticacao(self, usuario_id: str):
-        """Gera tokens de autenticação
-
-        Args:
-            usuario_id (str):
-
-        Returns:
-            str:
+    def codifica_token_autenticacao(self, usuario_id):
+        """Codifica tokens de autenticação
         """
         try:
             carga = {
@@ -56,13 +50,7 @@ class Usuario(db.Model):
 
     @staticmethod
     def decodifica_token_autenticacao(token_autenticacao):
-        """[summary]
-
-        Args:
-            token_autenticacao ([type]): [description]
-
-        Returns:
-            [type]: [description]
+        """Decodifica tokens de autenticação
         """
         try:
             carga = jwt.decode(token_autenticacao, chave)
