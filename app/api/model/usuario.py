@@ -33,7 +33,7 @@ class Usuario(db.Model):
         return flask_criptografia.check_password_hash(self.chave_hash, chave)
 
     def __repr__(self):
-        return f'<Pessoa "{self.nome}">'
+        return f'<Usuário "{self.nome}">'
 
     def codifica_token_autenticacao(self, usuario_id: str):
         """Gera tokens de autenticação
