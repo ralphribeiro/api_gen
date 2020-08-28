@@ -20,4 +20,8 @@ class ListaNegraToken(db.Model):
 
     @staticmethod
     def verifica_lista_negra(token_autenticado):
-        valor = ListaNegraToken.query.filter_by()
+        res = ListaNegraToken.query.filter_by(token=str(token_autenticado)).first()
+        if res:
+            return True
+        else:
+            return False
