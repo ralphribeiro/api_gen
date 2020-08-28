@@ -65,12 +65,12 @@ class Usuario(db.Model):
             [type]: [description]
         """
         try:
-            payload = jwt.decode(token_autenticacao, chave)
-            token_esta_bloqueado = ListaNegraToken.check_blacklist(token_autenticacao)
+            carga = jwt.decode(token_autenticacao, chave)
+            token_esta_bloqueado = ListaNegraToken.verifica_lista_negra(token_autenticacao)
             if token_esta_bloqueado:
                 return 'Token está na lista negra. Faça Login novamente.'
             else:
-                return payload['sub']
+                return carga['sub']
         except jwt.ExpiredSignatureError:
             return 'Assinatura expidada. Faça Login novamente.'
         except jwt.InvalidTokenError:
