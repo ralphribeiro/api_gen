@@ -16,11 +16,11 @@ class TesteConfigDesenvolvimento(TestCase):
         return app
 
     def teste_app_esta_em_modo_desenvolvimento(self):
-        self.assertFalse(app.config['CHAVE_SECRETA'] is 'meu_precioso')
+        self.assertTrue(app.config['CHAVE_SECRETA'] == 'minhachavesecreta')
         self.assertTrue(app.config['DEBUG'] is True)
         self.assertFalse(current_app is None)
         self.assertTrue(
-            app.config['SQLALCHEMY_DATABASE_URI'] == f'sqlite:///{os.path.join(base_diretorio, "desenvolvimento.db")}'
+            app.config['SQLALCHEMY_DATABASE_URI'] == os.getenv('DATABASE_URL')
         )
 
 
@@ -30,11 +30,12 @@ class TesteConfigTestes(TestCase):
         return app
 
     def teste_app_esta_em_modo_de_testes(self):
-        self.assertFalse(app.config['CHAVE_SECRETA'] is 'meu_precioso')
+        self.assertTrue(app.config['CHAVE_SECRETA'] == 'minhachavesecreta')
         self.assertTrue(app.config['DEBUG'])
         self.assertTrue(
-            app.config['SQLALCHEMY_DATABASE_URI'] == f'sqlite:///{os.path.join(base_diretorio, "testes.db")}'
+            app.config['SQLALCHEMY_DATABASE_URI'] == os.getenv('DATABASE_TESTES_URL')
         )
+        self.assertTrue(app.config['TESTANDO'])
 
 
 class TesteConfigProducao(TestCase):
@@ -48,4 +49,3 @@ class TesteConfigProducao(TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

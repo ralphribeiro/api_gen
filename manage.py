@@ -10,14 +10,16 @@ from app.api import create_app, db
 from app.api.model import usuario, lista_negra
 
 
-app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')
+
+app = create_app('desenv')
+
 app.register_blueprint(blueprint)
 
 app.app_context().push()
 
 gerente = Manager(app)
 
-migracao = Migrate(app, db)
+migrate = Migrate(app, db)
 
 gerente.add_command('db', MigrateCommand)
 
