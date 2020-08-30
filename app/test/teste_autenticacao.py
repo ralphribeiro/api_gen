@@ -3,39 +3,43 @@ import json
 from app.test.base import CasoDeTesteBase
 from faker import Faker
 
-faker = Faker('pt_BR')
-usuario_nome = faker.name()
-usuario_email = faker.email()
-chave = faker.cpf()
 
+def cria_usuario_teste() -> dict:
+    faker = Faker('pt_PT')
+    Faker.seed(1000)
+    return dict(
+        nome=faker.name(),
+        email=faker.email(),
+        chave=faker.swift()
+    )
 
 def registra_usuario(obj):
+    usu = cria_usuario_teste()
     return obj.client.post(
         '/usuario/',
         data=json.dumps(dict(
-            nome=usuario_nome,
-            email=usuario_email,
-            chave=chave
+            nome=usu['nome'],
+            email=usu['email'],
+            chave=usu['chave']
         )),
         content_type='application/json'
     )
 
 
 def login_usuario(obj):
-    global usuario_nome
-    global chave
+    import pdb; pdb.set_trace()
     return obj.client.post(
         '/autenticacao/login',
         data=json.dumps(dict(
-            email=usuario_email,
-            chave=chave
+            email=obj['email'],
+            chave=obj['chave']
         )),
         content_type='application/json'
     )
 
 
 class TesteAutenticacao(CasoDeTesteBase):
-    def teste_usuario_registrado(self):
+    def teste_1_usuario_registrado(self):
         with self.client:
             response = registra_usuario(self)
             dado = json.loads(response.data.decode())
@@ -45,7 +49,7 @@ class TesteAutenticacao(CasoDeTesteBase):
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)
 
-    def teste_se_registrado_com_usuario_registrado(self):
+    def teste_2_se_registrado_com_usuario_registrado(self):
         with self.client:
             response = registra_usuario(self)
             dado = json.loads(response.data.decode())
@@ -54,6 +58,24 @@ class TesteAutenticacao(CasoDeTesteBase):
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 409)
             
+
+    def teste_3_login_usuario_registrado(self):
+        with self.client:
+            response = registra_usuario(self)
+            dado_registro = json.loads(response.data.decode())
+            self.assertTrue(dado_registro['status'] == 'sucesso')
+            self.assertTrue(dado_registro['message'] == 'Registrado com sucesso.')
+            self.assertTrue(dado_registro['Authorization'])
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 201)
+
+            response = login_usuario(self)
+            dado_login = json.loads(response.data.decode())
+            self.assertTrue(dado_login['status'] == 'sucesso')
+            self.assertTrue(dado_login['message'] == 'Login feito com sucesso.')
+            self.assertTrue(dado_login['Authorization'])
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)
       
 if __name__ == '__main__':
     unittest.main()

@@ -1,7 +1,7 @@
+from app.api.config import chave
 from flask_testing import TestCase
 from app.api import db
 from manage import app
-
 
 
 class CasoDeTesteBase(TestCase):
@@ -18,4 +18,3 @@ class CasoDeTesteBase(TestCase):
     def tearDown(self):
         db.session.remove()
         # db.drop_all()
-        

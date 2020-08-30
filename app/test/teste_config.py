@@ -35,7 +35,7 @@ class TesteConfigTestes(TestCase):
         self.assertTrue(
             app.config['SQLALCHEMY_DATABASE_URI'] == os.getenv('DATABASE_TESTES_URL')
         )
-        self.assertTrue(app.config['TESTANDO'])
+        self.assertTrue(app.testing)
 
 
 class TesteConfigProducao(TestCase):

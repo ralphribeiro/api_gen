@@ -20,7 +20,7 @@ class ConfigDesenvolvimento(Config):
 
 class ConfigTestes(Config):
     DEBUG = True
-    TESTANDO = True
+    TESTING = True
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_TESTES_URL')
     PRESERVE_CONTEXT_ON_EXCEPTION = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
