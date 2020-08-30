@@ -2,6 +2,8 @@ from flask_testing import TestCase
 from app.api import db
 from manage import app
 
+
+
 class CasoDeTesteBase(TestCase):
     """Base de testes
     """

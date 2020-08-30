@@ -33,7 +33,7 @@ def token_admin_obrigatorio(func):
         if not admin:
             objeto_resposta = {
                 'status': 'falha',
-                'mensagem': 'Token de administrador obrigatório'
+                'message': 'Token de administrador obrigatório'
             }
             return objeto_resposta, 401
 

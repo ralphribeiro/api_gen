@@ -8,26 +8,27 @@ class Autenticacao:
     def login_usuario(dado):
         try:
             usuario = Usuario.query.filter_by(email=dado.get('email')).first()
+            # import pdb; pdb.set_trace()
             if usuario and usuario.verifica_chave(dado.get('chave')):
                 token_autenticacao = usuario.codifica_token_autenticacao(
                     usuario.id)
                 if token_autenticacao:
                     objeto_resposta = {
                         'status': 'sucesso',
-                        'mensagem': 'Login feito com sucesso.',
-                        'Autorização': token_autenticacao.decode()
+                        'message': 'Login feito com sucesso.',
+                        'Authorization': token_autenticacao.decode()
                     }
                     return objeto_resposta, 200
                 else:
                     objeto_resposta = {
                         'status': 'falha',
-                        'mensagem': 'Usuário ou/e Senha inválido(s).'
+                        'message': 'Usuário ou/e Senha inválido(s).'
                     }
                     return objeto_resposta, 401
         except Exception as e:
             objeto_resposta = {
                 'status': 'falha',
-                'mensagem': 'Tente novamente mais tarde.'
+                'message': 'Tente novamente mais tarde.'
             }
             return objeto_resposta, 500
 
@@ -75,12 +76,12 @@ class Autenticacao:
                 return objeto_resposta, 200
             objeto_resposta = {
                 'status': 'falha',
-                'mensagem': resp
+                'message': resp
             }
             return objeto_resposta, 401
         else:
             objeto_resposta = {
                 'status': 'falha',
-                'mensagem': 'Forneça um token de autenticacao válido.'
+                'message': 'Forneça um token de autenticacao válido.'
             }
             return objeto_resposta, 401

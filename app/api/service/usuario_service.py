@@ -20,11 +20,10 @@ def cria_um_novo_usuario(dado):
 
         salva_alteracoes(usuario_novo)
         return gera_token(usuario_novo)
-
     else:
         objeto_resposta = {
-            'status': 'atenção',
-            'mensagem': 'Usuário existente. Faça o Login.'
+            'status': 'falha',
+            'message': 'Usuário existente. Faça o Login.'
         }
         return objeto_resposta, 409
 
@@ -44,16 +43,16 @@ def salva_alteracoes(dado):
 
 def gera_token(usuario):
     try:
-        token_autenticacao = usuario.codcodifica_token_autenticacao(usuario.id)
+        token_autenticacao = usuario.codifica_token_autenticacao(usuario.id)
         objeto_resposta = {
             'status': 'sucesso',
-            'mensagem': 'Registrado com sucesso.',
-            'Autorização': token_autenticacao.decode()
+            'message': 'Registrado com sucesso.',
+            'Authorization': token_autenticacao.decode()
         }
         return objeto_resposta, 201
     except Exception as e:
         objeto_resposta = {
             'status': 'falha',
-            'mensagem': 'Ocorreu um erro inesperado, tente novamente mais tarde'
+            'message': 'Ocorreu um erro inesperado, tente novamente mais tarde'
         }
         return objeto_resposta, 401

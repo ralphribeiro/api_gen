@@ -1,68 +1,59 @@
-# import unittest
-# import json
-# from app.test.base import CasoDeTesteBase
+import unittest
+import json
+from app.test.base import CasoDeTesteBase
+from faker import Faker
+
+faker = Faker('pt_BR')
+usuario_nome = faker.name()
+usuario_email = faker.email()
+chave = faker.cpf()
 
 
-# def registra_usuario(self):
-#     return self.client.post(
-#         '/usuario/',
-#         data=json.dumps(dict(
-#             email='exemploum@um.com',
-#             nome='nomeexemploum',
-#             chave='654321'
-#         )),
-#         content_type='application/json'
-#     )
+def registra_usuario(obj):
+    return obj.client.post(
+        '/usuario/',
+        data=json.dumps(dict(
+            nome=usuario_nome,
+            email=usuario_email,
+            chave=chave
+        )),
+        content_type='application/json'
+    )
 
 
-# def login_usuario(self):
-#     return self.client.post(
-#         '/autenticacao/login',
-#         data=json.dumps(dict(
-#             email='exemploum@um.com',
-#             chave='654321'
-#         )),
-#         content_type='application/json'
-#     )
+def login_usuario(obj):
+    global usuario_nome
+    global chave
+    return obj.client.post(
+        '/autenticacao/login',
+        data=json.dumps(dict(
+            email=usuario_email,
+            chave=chave
+        )),
+        content_type='application/json'
+    )
 
 
-# class TesteAutenticacao(CasoDeTesteBase):
-#     def test_login_usuario_logado(self):
-#         with self.client:
-#             usuario_response = registra_usuario(self)
-#             response_data = json.loads(usuario_response.data.decode())
-#             self.assertTrue(response_data['Autorizacao'])
-#             self.assertEqual(usuario_response.status_code, 201)
+class TesteAutenticacao(CasoDeTesteBase):
+    def teste_usuario_registrado(self):
+        with self.client:
+            response = registra_usuario(self)
+            dado = json.loads(response.data.decode())
+            self.assertTrue(dado['status'] == 'sucesso')
+            self.assertTrue(dado['message'] == 'Registrado com sucesso.')
+            self.assertTrue('Authorization' in dado)
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 201)
 
-#             login_response = login_usuario(self)
-#             data = json.loads(login_response.data.decode())
-#             self.assertTrue(data['Autorizacao'])
-#             self.assertEqual(login_response.status_code, 200)
-
-#     def test_logout_valido(self):
-#         with self.client:
-#             usuario_response = registra_usuario(self)
-#             response_data = json.loads(usuario_response.data.decode())
-#             self.assertTrue(response_data['Autorizacao'])
-#             self.assertEqual(usuario_response.status_code, 201)
-
-#             login_response = login_usuario(self)
-#             data = json.loads(login_response.data.decode())
-#             self.assertTrue(data['Autorizacao'])
-#             self.assertEqual(login_response.status_code, 200)
-
-#             response = self.client.post(
-#                 '/autenticacao/logout',
-#                 headers=dict(
-#                     Autorizacao='Bearer ' + json.loads(
-#                         login_response.data.decode()
-#                     )['Autorizacao']
-#                 )
-#             )
-#             data = json.loads(response.data.decode())
-#             self.assertTrue(data['status'] == 'success')
-#             self.assertEqual(response.status_code, 200)
-
-
-# if __name__ == '__main__':
-#     unittest.main()
+    def teste_se_registrado_com_usuario_registrado(self):
+        with self.client:
+            response = registra_usuario(self)
+            dado = json.loads(response.data.decode())
+            self.assertTrue(dado['status'] == 'falha')
+            self.assertTrue(dado['message'] == 'Usuário existente. Faça o Login.')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 409)
+            
+      
+if __name__ == '__main__':
+    unittest.main()
