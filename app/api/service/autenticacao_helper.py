@@ -8,7 +8,6 @@ class Autenticacao:
     def login_usuario(dado):
         try:
             usuario = Usuario.query.filter_by(email=dado.get('email')).first()
-            # import pdb; pdb.set_trace()
             if usuario and usuario.verifica_chave(dado.get('chave')):
                 token_autenticacao = usuario.codifica_token_autenticacao(
                     usuario.id)
@@ -20,11 +19,19 @@ class Autenticacao:
                     }
                     return objeto_resposta, 200
                 else:
+                    # senha inválida
                     objeto_resposta = {
                         'status': 'falha',
                         'message': 'Usuário ou/e Senha inválido(s).'
                     }
                     return objeto_resposta, 401
+            else:
+                # usuário inválido
+                objeto_resposta = {
+                    'status': 'falha',
+                    'message': 'Usuário ou/e Senha inválido(s).'
+                }
+                return objeto_resposta, 401
         except Exception as e:
             objeto_resposta = {
                 'status': 'falha',
@@ -38,6 +45,7 @@ class Autenticacao:
             token_autenticacao = dado.split(" ")[1]
         else:
             token_autenticacao = ''
+
         if token_autenticacao:
             resp = Usuario.decodifica_token_autenticacao(token_autenticacao)
             if not isinstance(resp, str):
@@ -46,7 +54,7 @@ class Autenticacao:
             else:
                 objeto_resposta = {
                     'status': 'falha',
-                    'menssagem': resp
+                    'message': resp
                 }
                 return objeto_resposta, 401
         else:

@@ -19,7 +19,7 @@ class TesteUsuarioModel(CasoDeTesteBase):
 
     def teste_codifica_token_autenticacao(self):
         usuario = Usuario(
-            email=f'{str.lower(self.faker.email())}@test.com',
+            email=f'{str.lower(self.faker.email()+str(datetime.datetime.now().second))}',
             chave='test2',
             registrado_em=datetime.datetime.utcnow()
         )
@@ -31,7 +31,7 @@ class TesteUsuarioModel(CasoDeTesteBase):
 
     def teste_decodifica_token_autenticacao(self):
         usuario = Usuario(
-            email=f'{str.lower(self.faker.email())}@test.com',
+            email=f'{str.lower(self.faker.email()+str(datetime.datetime.now().second))}',
             chave='test2',
             registrado_em=datetime.datetime.utcnow()
         )

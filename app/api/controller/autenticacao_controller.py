@@ -27,5 +27,5 @@ class LogoutAPI(Resource):
     """
     @api.doc('logout do usuário')
     def post(self):
-        autenticacao_header = request.headers.get('Autorizacao')
+        autenticacao_header = request.headers.get('Authorization')
         return Autenticacao.logout_usuario(autenticacao_header)
