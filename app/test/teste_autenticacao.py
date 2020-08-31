@@ -91,6 +91,17 @@ class TesteAutenticacao(CasoDeTesteBase):
             self.assertTrue(dado_login['Authorization'])
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)
+
+
+    def teste_4_login_usuario_nao_registrado(self):
+        """ Test for login of non-registered user """
+        with self.client:
+            response = login_usuario(self)
+            dado = json.loads(response.data.decode())
+            self.assertTrue(dado['status'] == 'falha')
+            self.assertTrue(dado['message'] == 'Usuário ou/e Senha inválido(s).')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 401)
       
 if __name__ == '__main__':
     unittest.main()
