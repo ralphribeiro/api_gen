@@ -1,4 +1,3 @@
-import os
 import unittest
 
 
@@ -7,20 +6,15 @@ from flask_script import Manager
 
 from app import blueprint
 from app.api import create_app, db
-from app.api.model import usuario, lista_negra
 
 
 
 app = create_app('desenv')
 
 app.register_blueprint(blueprint)
-
 app.app_context().push()
-
 gerente = Manager(app)
-
 migrate = Migrate(app, db)
-
 gerente.add_command('db', MigrateCommand)
 
 
